@@ -9,7 +9,7 @@ interface Props {
 }
 
 const getPlaceholder = (field: Field): string => {
-  if (field.placeholder && typeof field.placeholder === 'object' && 'message' in field.placeholder) {
+  if (typeof field.placeholder === 'object' && 'message' in field.placeholder) {
     return field.placeholder.message;
   }
   if (typeof field.placeholder === 'string') {
@@ -19,7 +19,9 @@ const getPlaceholder = (field: Field): string => {
 };
 
 const InputField: React.FC<Props> = ({ field, value, error, onChange }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const target = e.target;
     let val: any;
     if (target instanceof HTMLInputElement && target.type === 'checkbox') {
@@ -30,43 +32,79 @@ const InputField: React.FC<Props> = ({ field, value, error, onChange }) => {
     onChange(field.name, val);
   };
 
+  const baseInputStyle =
+    'w-full px-3 py-2 border rounded-md outline-none transition focus:ring-2 duration-150';
+
   switch (field.type) {
     case 'text':
     case 'email':
     case 'password':
       return (
-        <div className="form-group mb-3">
-          <label>{getPlaceholder(field)}</label>
+        <div>
+          <label
+            htmlFor={field.name}
+            className="block mb-1 text-sm font-semibold text-gray-700"
+          >
+            {getPlaceholder(field)}
+          </label>
           <input
+            id={field.name}
             type={field.type}
             name={field.name}
             value={value || ''}
             onChange={handleChange}
             placeholder={getPlaceholder(field)}
-            className={`form-control ${error ? 'is-invalid' : ''}`}
+            className={`${baseInputStyle} ${
+              error
+                ? 'border-red-500 focus:ring-red-400'
+                : 'border-gray-300 focus:ring-blue-400'
+            }`}
+            aria-invalid={!!error}
+            aria-describedby={error ? `${field.name}-error` : undefined}
           />
-          {error && <div className="invalid-feedback">{error}</div>}
+          {error && (
+            <p
+              id={`${field.name}-error`}
+              className="text-red-600 text-sm mt-1 select-none"
+              role="alert"
+            >
+              {error}
+            </p>
+          )}
         </div>
       );
 
     case 'checkbox':
       return (
-        <div className="form-group form-check mb-3">
+        <div className="flex items-center space-x-2">
           <input
-            type="checkbox"
-            className={`form-check-input ${error ? 'is-invalid' : ''}`}
             id={field.name}
+            type="checkbox"
             checked={!!value}
             onChange={handleChange}
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+            aria-invalid={!!error}
+            aria-describedby={error ? `${field.name}-error` : undefined}
           />
-          <label htmlFor={field.name} className="form-check-label">
+          <label
+            htmlFor={field.name}
+            className="text-gray-700 select-none cursor-pointer"
+          >
             {getPlaceholder(field)}
           </label>
-          {error && <div className="invalid-feedback d-block">{error}</div>}
+          {error && (
+            <p
+              id={`${field.name}-error`}
+              className="text-red-600 text-sm mt-1 select-none"
+              role="alert"
+            >
+              {error}
+            </p>
+          )}
         </div>
       );
 
-    // می‌تونی select، radio و ... هم اضافه کنی
+    // You can add select, radio inputs similarly here...
 
     default:
       return null;
