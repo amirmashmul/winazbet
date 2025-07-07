@@ -19,31 +19,32 @@ const getPlaceholder = (field: Field): string => {
 };
 
 const InputField: React.FC<Props> = ({ field, value, error, onChange }) => {
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const target = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     let val: any;
-    if (target instanceof HTMLInputElement && target.type === 'checkbox') {
-      val = target.checked;
+    if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+      val = e.target.checked;
     } else {
-      val = target.value;
+      val = e.target.value;
     }
     onChange(field.name, val);
   };
 
-  const baseInputStyle =
-    'w-full px-3 py-2 border rounded-md outline-none transition focus:ring-2 duration-150';
+  const baseInputStyle = `
+    w-full px-4 py-2 border rounded-md
+    outline-none transition
+    focus:ring-2 focus:ring-blue-500
+    ${error ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}
+  `;
 
   switch (field.type) {
     case 'text':
     case 'email':
     case 'password':
       return (
-        <div>
+        <div className="mb-5">
           <label
             htmlFor={field.name}
-            className="block mb-1 text-sm font-semibold text-gray-700"
+            className="block mb-2 font-semibold text-gray-700"
           >
             {getPlaceholder(field)}
           </label>
@@ -54,18 +55,14 @@ const InputField: React.FC<Props> = ({ field, value, error, onChange }) => {
             value={value || ''}
             onChange={handleChange}
             placeholder={getPlaceholder(field)}
-            className={`${baseInputStyle} ${
-              error
-                ? 'border-red-500 focus:ring-red-400'
-                : 'border-gray-300 focus:ring-blue-400'
-            }`}
+            className={baseInputStyle}
             aria-invalid={!!error}
             aria-describedby={error ? `${field.name}-error` : undefined}
           />
           {error && (
             <p
               id={`${field.name}-error`}
-              className="text-red-600 text-sm mt-1 select-none"
+              className="mt-1 text-sm text-red-600"
               role="alert"
             >
               {error}
@@ -76,26 +73,28 @@ const InputField: React.FC<Props> = ({ field, value, error, onChange }) => {
 
     case 'checkbox':
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center mb-5 space-x-3">
           <input
             id={field.name}
             type="checkbox"
             checked={!!value}
             onChange={handleChange}
-            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+            className={`h-5 w-5 rounded border ${
+              error ? 'border-red-500' : 'border-gray-300'
+            } focus:ring-2 focus:ring-blue-500`}
             aria-invalid={!!error}
             aria-describedby={error ? `${field.name}-error` : undefined}
           />
           <label
             htmlFor={field.name}
-            className="text-gray-700 select-none cursor-pointer"
+            className="select-none text-gray-700 font-medium cursor-pointer"
           >
             {getPlaceholder(field)}
           </label>
           {error && (
             <p
               id={`${field.name}-error`}
-              className="text-red-600 text-sm mt-1 select-none"
+              className="mt-1 text-sm text-red-600"
               role="alert"
             >
               {error}
@@ -103,8 +102,6 @@ const InputField: React.FC<Props> = ({ field, value, error, onChange }) => {
           )}
         </div>
       );
-
-    // You can add select, radio inputs similarly here...
 
     default:
       return null;

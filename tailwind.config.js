@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}", // Adjust according to your folder structure
+    "./src/**/*.{js,jsx,ts,tsx}",  // مسیر درست برای فایل‌های React
   ],
   theme: {
     extend: {},

@@ -44,34 +44,32 @@ const FormBuilder: React.FC<Props> = ({ steps, onSubmit }) => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-8 bg-white shadow-lg rounded-lg border border-gray-200">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-900 border-b border-gray-300 pb-3">
+    <div className="max-w-md mx-auto mt-8 p-8 bg-white shadow-lg rounded-lg border border-gray-200">
+      <h2 className="text-3xl font-bold mb-6 text-gray-900 border-b border-gray-300 pb-4">
         {step.title?.message || `مرحله ${currentStep + 1}`}
       </h2>
 
-      <form>
-        <div className="space-y-6">
-          {step.fields.map((field) =>
-            isFieldVisible(field) ? (
-              <InputField
-                key={field.name}
-                field={field}
-                value={formData[field.name]}
-                error={errors[field.name]}
-                onChange={handleChange}
-              />
-            ) : null
-          )}
-        </div>
+      <form onSubmit={e => e.preventDefault()}>
+        {step.fields.map(field =>
+          isFieldVisible(field) ? (
+            <InputField
+              key={field.name}
+              field={field}
+              value={formData[field.name]}
+              error={errors[field.name]}
+              onChange={handleChange}
+            />
+          ) : null
+        )}
 
         <div className="flex justify-between mt-8">
           {currentStep > 0 && (
             <button
               type="button"
               onClick={prevStep}
-              className="px-5 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
+              className="px-6 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition font-semibold"
             >
-              ⬅ مرحله قبل
+              ← مرحله قبل
             </button>
           )}
 
@@ -79,9 +77,9 @@ const FormBuilder: React.FC<Props> = ({ steps, onSubmit }) => {
             <button
               type="button"
               onClick={handleNextClick}
-              className="ml-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              className="ml-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-semibold"
             >
-              مرحله بعد ➡
+              مرحله بعد →
             </button>
           )}
 
@@ -89,9 +87,9 @@ const FormBuilder: React.FC<Props> = ({ steps, onSubmit }) => {
             <button
               type="button"
               onClick={handleSubmitClick}
-              className="ml-auto px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              className="ml-auto px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition font-semibold"
             >
-              ✅ ثبت نهایی
+              ثبت نهایی ✔️
             </button>
           )}
         </div>
